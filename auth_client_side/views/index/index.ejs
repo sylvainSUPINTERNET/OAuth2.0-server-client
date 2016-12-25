@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</head>
+
+<style>
+    h2 {
+        text-align: center;
+    }
+
+    #content {
+        font-size: 16px;
+    }
+</style>
+
+<body>
+<!-- Connection / Deconexion -->
+
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://localhost:4000">OAuth 2.0 Google+</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Action<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="" onclick="hello('google').login()" data-toggle="modal" data-target="#myModal">Connection
+                                via Google</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" onclick="hello('google').logout()">Deconnexion</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<h2>OAuth 2.0 (Client side)</h2>
+
+<script src="/hello.all.min.js"></script>
+<script>
+    hello.init({
+        google: "494077361814-75cb6d8u7n19bnjnnlgaei5baraojsj4.apps.googleusercontent.com"
+    });
+</script>
+
+<script>
+
+    'use strict';
+
+
+    hello.on('auth.login', function (auth) {
+
+        hello(auth.network).api('/me').then(function (resp) {
+
+            console.log(resp); // all data from user connected via OAuth
+            var name = resp.displayName;
+            var blocName = document.getElementById('name');
+
+            var langue = resp.language;
+            var blocLanguage = document.getElementById('country');
+
+            var url = resp.url;
+            var blocLink = document.getElementById('link');
+            var blocLinkAttr = document.getElementById('link').firstElementChild;
+            blocLinkAttr.href = url;
+
+            var pictureLink = resp.picture;
+            var blocPicture = document.getElementById('picture');
+            blocPicture.src = pictureLink;
+
+
+            blocName.innerHTML = name;
+            blocLanguage.innerHTML = langue;
+
+        });
+    });
+
+    // remove the greeting when we log out
+
+    hello.on('auth.logout', function () {
+        var lab = document.getElementById("content");
+
+        if (lab != null) {
+            document.body.removeChild(lab);
+        }
+
+    });
+
+
+</script>
+
+<div class="jumbotron" style="text-align: center;" id="jum">
+    <h1 class="display-3">OAuth 2.0 / Google+ API</h1>
+    <p class="lead">Simple connection with OAuth to Google and return information about account who just connected</p>
+    <br>
+    <p>You must be connected to use it</p>
+    <hr class="my-2">
+    <p>
+        Menu /  Actions  / Connection
+                        |  Deconnection
+    </p>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Profile Google+</h4>
+            </div>
+            <div class="modal-body">
+                <div id="content" style="text-align: center;">
+                    <br>
+                    <h4 id="name"></h4>
+                    <div style="font-size: 16px;" id="country"></div>
+                    <br>
+                    <img src="" id="picture">
+                    <br>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="link" style="text-align: center;">
+                    <a href="#">Lien Google+</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="deco">
+
+</div>
+
+
+</body>
+</html>
